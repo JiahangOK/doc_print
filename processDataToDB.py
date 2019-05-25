@@ -106,10 +106,23 @@ def createWordDMT():
         document.add_paragraph('')
 
         p = document.add_paragraph('')
-        p.add_run('{} 同学：'.format(names)).font.size = Pt(28)
+
+        r = p.add_run('{} '.format(names))
+        r.font.size = Pt(32)
+        r.font.name = u'华文新魏'
+        r._element.rPr.rFonts.set(qn('w:eastAsia'), u'华文新魏')
+        p.add_run('同学：'.format(names)).font.size = Pt(28)
 
         p = document.add_paragraph('')
-        p.add_run('  荣获北京交通大学第十一届“院际杯”体育舞蹈大赛').font.size = Pt(28)
+        p.add_run('    荣获北京交通大学2019年学生体育“学院杯”').font.size = Pt(28)
+
+        p = document.add_paragraph('')
+        r = p.add_run('体育舞蹈')
+        r.font.size = Pt(28)
+        r.bold = True
+
+        r = p.add_run(' 组')
+        r.font.size = Pt(28)
 
         r = p.add_run(' {} '.format(item))
         r.bold = True
