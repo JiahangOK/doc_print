@@ -8,7 +8,8 @@ from docx.shared import Pt
 from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.text import WD_BREAK
-dic_num={
+
+dic_num = {
     1: '一',
     2: '二',
     3: '三',
@@ -20,6 +21,8 @@ dic_num={
     9: '九',
     10: '十',
 }
+
+
 def createTables():
     conn = sqlite3.connect('wjh_yjb.db')
     print("Opened database successfully")
@@ -91,11 +94,11 @@ def createWordDMT():
     for section in sections:
         # change orientation to landscape
         section.orientation = WD_ORIENT.LANDSCAPE
-        section.page_width = Mm(297)
-        section.page_height = Mm(210)
+        section.page_width = Mm(257)
+        section.page_height = Mm(182)
     document.styles['Normal'].font.name = u'宋体'
     document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
-    document.styles['Normal'].font.size = Pt(26)
+    document.styles['Normal'].font.size = Pt(15)
 
     for row in result:
         item = row[0]
@@ -104,50 +107,128 @@ def createWordDMT():
 
         document.add_paragraph('')
         document.add_paragraph('')
+        document.add_paragraph('')
 
         p = document.add_paragraph('')
 
         r = p.add_run('{} '.format(names))
-        r.font.size = Pt(32)
-        r.font.name = u'华文新魏'
-        r._element.rPr.rFonts.set(qn('w:eastAsia'), u'华文新魏')
-        p.add_run('同学：'.format(names)).font.size = Pt(28)
-
-        p = document.add_paragraph('')
-        p.add_run('    荣获北京交通大学2019年学生体育“学院杯”').font.size = Pt(28)
-
-        p = document.add_paragraph('')
-        r = p.add_run('体育舞蹈')
-        r.font.size = Pt(28)
+        r.font.size = Pt(26)
         r.bold = True
+        r.font.name = u'楷体'
+        r._element.rPr.rFonts.set(qn('w:eastAsia'), u'楷体')
+        p.add_run('同学：'.format(names)).font.size = Pt(22)
 
-        r = p.add_run(' 组')
-        r.font.size = Pt(28)
+        p = document.add_paragraph('')
+        p.add_run('    荣获北京交通大学2019年学生体育“学院杯”暨第十一届“院际杯”体育舞蹈比赛').font.size = Pt(22)
+
+        # p = document.add_paragraph('')
+        # r = p.add_run('体育舞蹈')
+        # r.font.size = Pt(22)
+        # r.bold = True
+        #
+        # r = p.add_run(' 组')
+        # r.font.size = Pt(22)
 
         r = p.add_run(' {} '.format(item))
         r.bold = True
-        r.font.size = Pt(28)
+        r.font.size = Pt(22)
 
-        p.add_run('项目').font.size = Pt(28)
+        p.add_run('项目').font.size = Pt(22)
 
         p = document.add_paragraph('')
         r = p.add_run('第 {} 名'.format(rank))
         r.bold = True
-        r.font.size = Pt(42)
+        r.font.size = Pt(36)
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
         p = document.add_paragraph('')
         r = p.add_run('北京交通大学')
-        r.font.size = Pt(28)
+        r.font.size = Pt(22)
         p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 
         p = document.add_paragraph('')
         r = p.add_run('2019 年 5 月')
-        r.font.size = Pt(28)
+        r.font.size = Pt(22)
         p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
         run = p.add_run()
         run.add_break(WD_BREAK.PAGE)
         document.save('证书.docx')
+
+
+def createWordDMT_2():
+    conn = sqlite3.connect('wjh_yjb.db')
+    print("Opened database successfully")
+    c = conn.cursor()
+    result = c.execute('SELECT * FROM YJB_TEAM')
+    
+    document = Document()
+    sections = document.sections
+    for section in sections:
+        # change orientation to landscape
+        section.orientation = WD_ORIENT.LANDSCAPE
+        section.page_width = Mm(257)
+        section.page_height = Mm(182)
+    document.styles['Normal'].font.name = u'宋体'
+    document.styles['Normal']._element.rPr.rFonts.set(qn('w:eastAsia'), u'宋体')
+    document.styles['Normal'].font.size = Pt(15)
+
+    for row in result:
+        item = '交谊舞队列舞'
+        rank = dic_num[row[1]]
+        names = row[2].strip().split('、')
+        assert len(names) == 16
+
+        document.add_paragraph('')
+        document.add_paragraph('')
+        document.add_paragraph('')
+
+        p = document.add_paragraph('')
+
+        for i in range(len(names)):
+            r = p.add_run('{} '.format(names[i]))
+            r.font.size = Pt(16)
+            r.bold = True
+            r.font.name = u'楷体'
+            r._element.rPr.rFonts.set(qn('w:eastAsia'), u'楷体')
+
+            if i == 7:
+                p = document.add_paragraph('')
+        p.add_run('同学：'.format(names)).font.size = Pt(20)
+        p = document.add_paragraph('')
+        p.add_run('    荣获北京交通大学2019年学生体育“学院杯”暨第十一届“院际杯”体育舞蹈比赛').font.size = Pt(20)
+
+        # p = document.add_paragraph('')
+        # r = p.add_run('体育舞蹈')
+        # r.font.size = Pt(22)
+        # r.bold = True
+        #
+        # r = p.add_run(' 组')
+        # r.font.size = Pt(22)
+
+        r = p.add_run(' {} '.format(item))
+        r.bold = True
+        r.font.size = Pt(20)
+
+        p.add_run('项目').font.size = Pt(20)
+
+        p = document.add_paragraph('')
+        r = p.add_run('第 {} 名'.format(rank))
+        r.bold = True
+        r.font.size = Pt(36)
+        p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
+        p = document.add_paragraph('')
+        r = p.add_run('北京交通大学')
+        r.font.size = Pt(20)
+        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+
+        p = document.add_paragraph('')
+        r = p.add_run('2019 年 5 月')
+        r.font.size = Pt(20)
+        p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        run = p.add_run()
+        run.add_break(WD_BREAK.PAGE)
+        document.save('集体舞证书.docx')
 
 
 if __name__ == '__main__':
@@ -161,4 +242,7 @@ if __name__ == '__main__':
     # joinData()
 
     # 4.
-    createWordDMT()
+    # createWordDMT()
+
+    # 5
+    createWordDMT_2()
